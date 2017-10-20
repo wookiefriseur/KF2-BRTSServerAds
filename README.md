@@ -6,7 +6,7 @@ Name:       |  BRTSServerAds
 ----------- |   -----------
 Author:   | FZFalzar (Original author)
 Source: 	|   [Original version from FZFalzar](https://forums.tripwireinteractive.com/forum/killing-floor-2/killing-floor-2-modifications/general-modding-discussion-ad/beta-mod-releases/109273-mutator-brutus-serverads-serveractor)
-Homepage: | [Thread in TWI forums](https://forums.tripwireinteractive.com/forum/killing-floor-2/killing-floor-2-modifications/general-modding-discussion-ad/beta-mod-releases/109273-mutator-brutus-serverads-serveractor)
+Support: | [Thread in TWI forums](https://forums.tripwireinteractive.com/forum/killing-floor-2/killing-floor-2-modifications/general-modding-discussion-ad/beta-mod-releases/109273-mutator-brutus-serverads-serveractor)
 
 
 ### Dependencies and Files ###
@@ -16,6 +16,8 @@ Homepage: | [Thread in TWI forums](https://forums.tripwireinteractive.com/forum/
   
 ### How To ###
 
+* Compile and copy BRTSServerAds.u to: %server_root%\killingfloor2\KFGame\BrewedPC\
+* Copy KFBRTSServerAds.ini to: %server_root%\killingfloor2\KFGame\Config\
 * Edit PCServer-KFGame.ini or set in Webinterface:
 	- `ServerActors=IpDrv.WebServer`
 	- `ServerActors=BRTSServerAds.BRTSServerAds`
