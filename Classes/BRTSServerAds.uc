@@ -1,9 +1,5 @@
-// BRTSServerAds.uc
-// Version: 1.0.0
 class BRTSServerAds extends Actor
-    config(BRTSServerAds)
-    notplaceable
-    hidecategories(Navigation);
+    config(BRTSServerAds);
 
 enum String_Day
 {
@@ -14,8 +10,7 @@ enum String_Day
     Thu,
     Fri,
     Sat,
-    Sun,
-    String_Day_MAX
+    Sun
 };
 
 enum String_Mth
@@ -32,8 +27,7 @@ enum String_Mth
     Sep,
     Oct,
     Nov,
-    Dec,
-    String_Mth_MAX
+    Dec
 };
 
 struct DateTime
@@ -47,31 +41,12 @@ struct DateTime
     var string AMPM;
     var string DayStr;
     var string MonthStr;
-
-    structdefaultproperties
-    {
-        Day         = ""
-        Month       = ""
-        Year        = ""
-        Hour        = ""
-        Minute      = ""
-        Second      = ""
-        AMPM        = ""
-        DayStr      = ""
-        MonthStr    = ""
-    }
 };
 
 struct Wildcard
 {
     var string WildcardString;
     var string ActualValue;
-
-    structdefaultproperties
-    {
-        WildcardString  = ""
-        ActualValue     = ""
-    }
 };
 
 // ---------------------- VARS ------------------------------
@@ -85,18 +60,35 @@ var config array<config string> ServerAdsList;  // Messages
 // ToDo: add RandomMsgList or bRandomOrder for random order
 var config float MsgInterval;                   // Time between messages
 var config bool bUse24HrFormat;                 // 24h switch
+var config bool bUseRandomColor;
+var config int ConfigVer;
 
 // -------------------- INIT  ----------------------------
 function PostBeginPlay()
 {
-    if(Role == ROLE_Authority)
+    if( Role == ROLE_Authority )
     {
         Log2Srv("====================== Brutus Server Ads Loaded ======================");
-        Log2Srv(string(ServerAdsList.Length) @ "broadcast messages loaded, interval:" @ string(MsgInterval));
+        Log2Srv(TimeStamp());
+        Log2Srv(ServerAdsList.Length @ "messages loaded");
+        Log2Srv("MsgInterval:"@MsgInterval);
         Log2Srv("======================================================================");
         RefreshWildcardValues();
         CurrentMsgID = 0;
-    }   
+        UpdateConfigs();
+    }
+}
+
+function UpdateConfigs()
+{
+    if( ConfigVer == 0 )
+    {
+        ConfigVer = 1;
+        MsgInterval = 180.f;
+        bUse24HrFormat = true;
+        bUseRandomColor = false;
+        SaveConfig();
+    }
 }
 
 // -------------------- TOKEN FUNCTIONS  ----------------------------
@@ -110,16 +102,16 @@ function RefreshWildcardValues()
     local bool found;
     local DateTime DTG;
     local Wildcard WildcardItem;
-    
+
     DTG = GetDateTime();
     WildCardList.Length = 0;
 
     // ToDo: Replace tokens like SEC and MIN by HH:MM:SS and HH:MM etc.. Seconds on their own are useless
-    for(i = 0; i < SupportedWildcards.Length; i++)
+    for( i = 0; i < SupportedWildcards.Length; i++ )
     {
         found = true;
         WildcardItem.WildcardString = SupportedWildcards[i];
-        switch (WildcardItem.WildcardString) 
+        switch( WildcardItem.WildcardString ) 
         {
             case "{SERVERNAME}":    WildcardItem.ActualValue = GetServerName();     break;
             case "{DAY}":           WildcardItem.ActualValue = DTG.Day;             break;
@@ -147,14 +139,14 @@ function RefreshWildcardValues()
 /**
     Prepares a message for broadcast by replacing tokens with the wildcard value.
 **/
-function string ReplWildcardsInString(string S)
+function string ReplWildcardsInString( string S )
 {
     local int i, MatchIndex;
     local string MessageText;
-        
+
     MessageText = S;
 
-    for(i = 0; i < WildCardList.Length; i++)
+    for( i = 0; i < WildCardList.Length; i++ )
     {
         MatchIndex = InStr(MessageText, WildCardList[i].WildcardString);
         // If token detected, replace it with the corresponding value
@@ -231,13 +223,13 @@ function bool RunningProperly()
 /**
     Padding helper function, as there doesn't seem to be a string formatter.
 **/
-function string LeadingZeroes(coerce string InputStr, int TargetLength)
+function string LeadingZeroes( coerce string InputStr, int TargetLength )
 {
     local int i;
     local string Padding;
 
     Padding = "";
-    for(i = Len(InputStr); i < TargetLength; i++)
+    for( i = Len(InputStr); i < TargetLength; i++ )
     {
         Padding $= "0";
     }
@@ -248,7 +240,7 @@ function string LeadingZeroes(coerce string InputStr, int TargetLength)
 /**
     Prepend log messages with the mod name so the source is easier to find. 
 **/
-function Log2Srv(coerce string S)
+function Log2Srv( coerce string S )
 {
     LogInternal("[BRTSServerAds]" @ S);
 }
@@ -264,18 +256,19 @@ auto state Loop
 
         RefreshWildcardValues();
 
-        if((WorldInfo != none) && Role == ROLE_Authority)
+        if( (WorldInfo != none) && Role == ROLE_Authority )
         {
             msgID = CurrentMsgID;
             sMsg = ReplWildcardsInString(ServerAdsList[msgID]);
             foreach WorldInfo.AllControllers(class'PlayerController', PC)
             {
-                if(PC.bIsPlayer) PC.ClientMessage(sMsg);                
+                if( PC.bIsPlayer ) PC.ClientMessage(sMsg, 'FFFFFF'); //Freebase*: default color is White (New color Ex. 02D1FA)
+                                                                     //Will add a custom color system when I have more time
             }
         }
         CurrentMsgID++;
         // If reached last msg, start from the first again
-        if(CurrentMsgID >= (ServerAdsList.Length)) CurrentMsgID = 0;
+        if( CurrentMsgID >= (ServerAdsList.Length) ) CurrentMsgID = 0;
     }
 
 Begin:
