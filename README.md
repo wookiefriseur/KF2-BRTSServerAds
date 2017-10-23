@@ -17,7 +17,7 @@ Support: | [Thread in TWI forums](https://forums.tripwireinteractive.com/forum/k
 ### How To ###
 
 * Automated:
-	- Subscribe to the item in Steam Workshop: [http://steamcommunity.com/sharedfiles/filedetails/?id=1178393288](Brutus ServerAds)
+	- Subscribe to the item in Steam Workshop: [Brutus ServerAds](http://steamcommunity.com/sharedfiles/filedetails/?id=1178393288)
 * Manually:
 	- Compile and copy BRTSServerAds.u to: %server_root%\killingfloor2\KFGame\BrewedPC\
 * Let the server generate the default ini or copy KFBRTSServerAds.ini to: %server_root%\killingfloor2\KFGame\Config\
