@@ -2,7 +2,7 @@
 Brutus ServerAds ServerActor (original from FZFalzar) let's you display customisable server messages.
 
 [h1]Installation[/h1]
-Please refer to the [url=https://forums.tripwireinteractive.com/forum/killing-floor-2/killing-floor-2-modifications/general-modding-discussion-ad/beta-mod-releases/109273-mutator-brutus-serverads-serveractor]forum thread[/url] for help and instructions. Subscribing your to this mutator will save you the process of recompiling and/or reuploading the BRTSServerAds.u file. You can subscribe directly, to get the .u file or subscribe with your server to automate the process. Instructions on how to subscribe your server to Steam Workshop can be found [url=http://wiki.tripwireinteractive.com/index.php?title=Dedicated_Server_(Killing_Floor_2)#Setting_Up_Steam_Workshop_For_Servers]here[/url].
+Please refer to the [url=https://forums.tripwireinteractive.com/forum/killing-floor-2/killing-floor-2-modifications/general-modding-discussion-ad/beta-mod-releases/109273-mutator-brutus-serverads-serveractor]forum thread[/url] for help and instructions. Subscribing to this mutator will save you the process of recompiling and/or reuploading the BRTSServerAds.u file. You can subscribe directly to get the .u file or subscribe with your server to automate the process. Instructions on how to subscribe your server to Steam Workshop can be found [url=http://wiki.tripwireinteractive.com/index.php?title=Dedicated_Server_(Killing_Floor_2)#Setting_Up_Steam_Workshop_For_Servers]here[/url].
 
 [h1]Source[/h1]
 Official thread: [url=https://forums.tripwireinteractive.com/forum/killing-floor-2/killing-floor-2-modifications/general-modding-discussion-ad/beta-mod-releases/109273-mutator-brutus-serverads-serveractor]TWI forums[/url]
