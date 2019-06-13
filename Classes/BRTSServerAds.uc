@@ -57,11 +57,9 @@ var int CurrentMsgID;
 
 // ---------------- .ini file variables ----------------------
 var config array<config string> ServerAdsList;  // Messages
-// ToDo: add RandomMsgList or bRandomOrder for random order
 var config float MsgInterval;                   // Time between messages
 var config bool bUse24HrFormat;                 // 24h switch
-var config bool bUseRandomColor;
-var config int ConfigVer;
+var config int ConfigVer;                       // Version control for INI
 
 // -------------------- INIT  ----------------------------
 function PostBeginPlay()
@@ -81,12 +79,13 @@ function PostBeginPlay()
 
 function UpdateConfigs()
 {
+    // If missing, create INI with default values
     if( ConfigVer == 0 )
     {
         ConfigVer = 1;
-        MsgInterval = 180.f;
+        MsgInterval = 45.f;
         bUse24HrFormat = true;
-        bUseRandomColor = false;
+        ServerAdsList.AddItem("Welcome to" @ SupportedWildcards[0]);
         SaveConfig();
     }
 }
@@ -94,7 +93,7 @@ function UpdateConfigs()
 // -------------------- TOKEN FUNCTIONS  ----------------------------
 
 /** 
-    Gets fresh values for dynamic information like time or players for the wildcard struct.
+    Gets dynamic information like time or players for the wildcard struct.
 **/
 function RefreshWildcardValues()
 {
@@ -106,7 +105,6 @@ function RefreshWildcardValues()
     DTG = GetDateTime();
     WildCardList.Length = 0;
 
-    // ToDo: Replace tokens like SEC and MIN by HH:MM:SS and HH:MM etc.. Seconds on their own are useless
     for( i = 0; i < SupportedWildcards.Length; i++ )
     {
         found = true;
@@ -260,14 +258,18 @@ auto state Loop
         {
             msgID = CurrentMsgID;
             sMsg = ReplWildcardsInString(ServerAdsList[msgID]);
+
             foreach WorldInfo.AllControllers(class'PlayerController', PC)
             {
-                if( PC.bIsPlayer ) PC.ClientMessage(sMsg, 'FFFFFF'); //Freebase*: default color is White (New color Ex. 02D1FA)
-                                                                     //Will add a custom color system when I have more time
+                // System Announcement
+                if( PC.bIsPlayer ) WorldInfo.Game.Broadcast(PC, sMsg);
             }
+
         }
+        // Queue next message
         CurrentMsgID++;
-        // If reached last msg, start from the first again
+
+        // If reached last msg already, start from the first again
         if( CurrentMsgID >= (ServerAdsList.Length) ) CurrentMsgID = 0;
     }
 
@@ -275,7 +277,7 @@ Begin:
     BroadcastMsg();
     Sleep(MsgInterval);
     goto 'Begin';
-    stop;                
+    stop;
 }
 
 defaultproperties
